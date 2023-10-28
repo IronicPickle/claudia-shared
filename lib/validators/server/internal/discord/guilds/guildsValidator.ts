@@ -1,12 +1,13 @@
-import Validator from "../../../../objects/Validator.ts";
-import { ValidatorInputs } from "../../../../ts/api/generic.ts";
+import Validator from "../../../../../objects/Validator.ts";
+import { ValidatorInputs } from "../../../../../ts/api/generic.ts";
 import {
   GuildCreate,
   GuildUpdate,
   GuildUpsert,
-} from "../../../../ts/api/server/internal/guilds/guilds.ts";
+  GuildsSync,
+} from "../../../../../ts/api/server/internal/discord/guilds.ts";
 
-export default {
+const validators = {
   create: ({
     guildId,
     name,
@@ -56,4 +57,24 @@ export default {
       .is("string"),
     joinedAt: new Validator(joinedAt).skipIf(joinedAt == null).is("number"),
   }),
+  sync: ({ guilds }: ValidatorInputs<GuildsSync>) => ({
+    guilds: new Validator(guilds)
+      .is("array")
+      .exists()
+      .custom((guilds: Partial<GuildUpsert["body"]>[]) => {
+        for (const i in guilds) {
+          const guild = guilds[i];
+          for (const [key, validator] of Object.entries(
+            validators.upsert(guild)
+          )) {
+            if (validator.getFailed()) {
+              const [error] = validator.getErrors();
+              return `Index ${i} : Key ${key}- ${error}`;
+            }
+          }
+        }
+      }),
+  }),
 };
+
+export default validators;

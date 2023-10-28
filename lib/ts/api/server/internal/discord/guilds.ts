@@ -48,3 +48,16 @@ export interface GuildUpsert {
     joinedAt: number | undefined;
   };
 }
+
+export interface GuildsSync {
+  body: {
+    guilds: Array<{
+      guildId: string;
+      active: boolean;
+      name: string;
+      description: string | null | undefined;
+      joinedAt: number | undefined;
+    }>;
+  };
+  res: {};
+}

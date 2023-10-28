@@ -1,4 +1,3 @@
-import { log } from "../../../claudia-bot/src/lib/utils/generic.ts";
 import { GenericErrorCode } from "../enums/api.ts";
 import { ValidationErrors } from "../ts/api/generic.ts";
 
@@ -27,8 +26,6 @@ export const ok =
     ctx.response.headers.append("Access-Control-Allow-Credentials", true);
     ctx.response.headers.append("Content-Type", "application/json");
     ctx.response.status = statusCode;
-
-    if (body.error) log("[Oak]", `HTTP ERROR | ${statusCode} - ${body.error}`);
   };
 
 export const error =

@@ -1,4 +1,3 @@
-import { accepts } from "https://deno.land/std@0.193.0/http/negotiation.ts";
 import Validator from "../objects/Validator.ts";
 import { ValidationErrors } from "../ts/api/generic.ts";
 
