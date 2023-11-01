@@ -1,9 +1,14 @@
+import { DbDiscordGuild, DbDiscordMember } from "../dbSpec.ts";
+
 export interface GuildCreate {
-  body: {
+  params: {
     guildId: string;
+  };
+  body: {
     name: string;
     description: string | null | undefined;
     joinedAt: number | undefined;
+    members: DbDiscordMember[];
   };
   res: {
     guildId: string;
@@ -40,6 +45,7 @@ export interface GuildUpsert {
     name: string;
     description: string | null | undefined;
     joinedAt: number | undefined;
+    members: DbDiscordMember[];
   };
   res: {
     guildId: string;
@@ -51,13 +57,7 @@ export interface GuildUpsert {
 
 export interface GuildsSync {
   body: {
-    guilds: Array<{
-      guildId: string;
-      active: boolean;
-      name: string;
-      description: string | null | undefined;
-      joinedAt: number | undefined;
-    }>;
+    guilds: DbDiscordGuild[];
   };
-  res: {};
+  res: { upsertedCount: number; modifiedCount: number };
 }

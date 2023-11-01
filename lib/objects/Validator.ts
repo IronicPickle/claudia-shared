@@ -1,4 +1,4 @@
-import { emailRegex } from "../constants/generic.ts";
+import { discordIdRegex, emailRegex } from "../constants/generic.ts";
 import { enumContains } from "../utils/generic.ts";
 
 type Type = "array" | "object" | "boolean" | "number" | "string";
@@ -12,6 +12,15 @@ export default class Validator {
 
   constructor(value: any) {
     this.value = value;
+  }
+
+  private static checkTypeMatches(value: any, type: Type) {
+    if (type === "array") {
+      return Array.isArray(value);
+    } else if (type != null && typeof value !== type) {
+      return false;
+    }
+    return true;
   }
 
   public exists(message?: string) {
@@ -32,11 +41,7 @@ export default class Validator {
     const { errors, value } = this;
     if (!this.checkShouldValidate()) return this;
 
-    if (type === "array") {
-      if (!Array.isArray(value)) {
-        errors.push(message ?? "Invalid data");
-      }
-    } else if (type != null && typeof value !== type) {
+    if (!Validator.checkTypeMatches(value, type)) {
       errors.push(message ?? "Invalid data");
     }
 
@@ -164,6 +169,11 @@ export default class Validator {
         emailRegex,
         message ?? "Must conform with example@email.com"
       ),
+    isDiscordId: (message?: string) =>
+      this.regex.matches(
+        discordIdRegex,
+        message ?? "Must be a 17 or 18 integer string Discord ID"
+      ),
   };
 
   public number = {
@@ -232,6 +242,23 @@ export default class Validator {
     },
   };
 
+  public array = {
+    contains: (type: Type, message?: string) => {
+      const { errors, value } = this;
+      if (!this.checkShouldValidate()) return this;
+
+      if (
+        !Array.isArray(value) ||
+        !value.every((prop) => Validator.checkTypeMatches(prop, type))
+      ) {
+        errors.push(message ?? "Invalid data");
+      }
+
+      this.setIfFailed();
+      return this;
+    },
+  };
+
   public custom(validationFunction: (value: any) => string | void) {
     const { errors, value } = this;
     if (!this.checkShouldValidate()) return this;
@@ -241,6 +268,10 @@ export default class Validator {
 
     this.setIfFailed();
     return this;
+  }
+
+  public optional() {
+    return this.skipIf(this.value == null);
   }
 
   public skipIf(pass: boolean) {
