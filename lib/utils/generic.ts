@@ -1,3 +1,4 @@
+import { urlPathRegex } from "../constants/generic.ts";
 import Validator from "../objects/Validator.ts";
 import { ValidationErrors } from "../ts/api/generic.ts";
 
@@ -33,3 +34,6 @@ export const parseValidators = <K extends string | number | symbol>(
 
   return { failed, ...errors };
 };
+
+export const extractPathFromUrl = (url: string) =>
+  Array.from(url.matchAll(urlPathRegex))[0][1];

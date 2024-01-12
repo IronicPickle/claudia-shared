@@ -5,6 +5,8 @@ export const emailRegex =
 
 export const discordIdRegex = /^\d{17,19}$/g;
 
+export const urlPathRegex = /https?:\/\/.*?(\/.*)/g;
+
 export const httpMethodColors: Record<HttpMethod, ConsoleColor> = {
   [HttpMethod.Acl]: ConsoleColor.White,
   [HttpMethod.Bind]: ConsoleColor.White,
