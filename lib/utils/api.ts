@@ -1,5 +1,5 @@
 import { GenericErrorCode } from "../enums/api.ts";
-import { ValidationErrors } from "../ts/api/generic.ts";
+import { ApiCallRes, ValidationErrors } from "../ts/api/generic.ts";
 
 export const parseBody = async <B>(ctx: any) => {
   let body: B | null;

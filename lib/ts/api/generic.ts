@@ -5,6 +5,7 @@ export interface RequestDetails {
   res: {};
 }
 
+export type RequestResponse<D extends RequestDetails> = D["res"];
 export type RequestInputs<D extends RequestDetails> = Omit<D, "res">;
 
 export type ValidatorInputs<D extends RequestDetails> = Partial<
@@ -44,3 +45,8 @@ export type ApiError<K extends string | number | symbol> = {
   errorCode: any;
   validation: ValidationErrors<K>;
 };
+
+export interface ApiCallRes<R> {
+  error: ApiError<keyof R> | undefined;
+  data: R | undefined;
+}
