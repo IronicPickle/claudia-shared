@@ -1,5 +1,5 @@
 import { GenericErrorCode } from "../enums/api.ts";
-import { ApiCallRes, ValidationErrors } from "../ts/api/generic.ts";
+import { ValidationErrors } from "../ts/api/generic.ts";
 
 export const parseBody = async <B>(ctx: any) => {
   let body: B | null;
@@ -22,8 +22,6 @@ export const ok =
   (body: any = { message: "success" }, statusCode = 200) =>
   (ctx: any) => {
     ctx.response.body = JSON.stringify(body);
-    ctx.response.headers.append("Access-Control-Allow-Origin", "*");
-    ctx.response.headers.append("Access-Control-Allow-Credentials", true);
     ctx.response.headers.append("Content-Type", "application/json");
     ctx.response.status = statusCode;
   };
