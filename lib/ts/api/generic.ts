@@ -50,3 +50,8 @@ export interface ApiCallRes<R> {
   error: ApiError<keyof R> | undefined;
   data: R | undefined;
 }
+
+export interface ApiTokens {
+  sessionToken: string;
+  refreshToken: string;
+}

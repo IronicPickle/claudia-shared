@@ -36,3 +36,9 @@ export interface DbDiscordUser {
   locale: string | undefined;
   premiumType: DbDiscordPremiumTypes | undefined;
 }
+
+export interface DbUser {
+  discordUserId: string;
+}
+
+export type WithDbId<T> = T & { __id: string };
