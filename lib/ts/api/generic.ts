@@ -46,10 +46,13 @@ export type ApiError<K extends string | number | symbol> = {
   validation: ValidationErrors<K>;
 };
 
-export interface ApiCallRes<R> {
-  error: ApiError<keyof R> | undefined;
-  data: R | undefined;
-}
+export type ApiCallRes<R> =
+  | {
+      error: ApiError<keyof R>;
+    }
+  | {
+      data: R;
+    };
 
 export interface ApiTokens {
   sessionToken: string;

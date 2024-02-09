@@ -1,5 +1,6 @@
 import { GenericErrorCode } from "../enums/api.ts";
-import { ValidationErrors } from "../ts/api/generic.ts";
+import { ApiError } from "@shared/lib/ts/api/generic.ts";
+import { ApiCallRes, ValidationErrors } from "../ts/api/generic.ts";
 
 export const parseBody = async <B>(ctx: any) => {
   let body: B | null;
@@ -102,3 +103,15 @@ export const forbiddenError =
       },
       403
     )(ctx);
+
+export const isResError = <R>(
+  res: ApiCallRes<R>
+): res is {
+  error: ApiError<keyof R>;
+} => !!(res as any).error;
+
+export const isResData = <R>(
+  res: ApiCallRes<R>
+): res is {
+  data: R;
+} => !!(res as any).data;
