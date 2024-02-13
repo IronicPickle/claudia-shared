@@ -41,4 +41,4 @@ export interface DbUser {
   discordUserId: string;
 }
 
-export type WithDbId<T> = T & { __id: string };
+export type WithDbId<T> = T & { _id: string };

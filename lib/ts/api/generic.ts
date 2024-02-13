@@ -46,12 +46,12 @@ export type ApiError<K extends string | number | symbol> = {
   validation: ValidationErrors<K>;
 };
 
-export type ApiCallRes<R> =
+export type ApiCallRes<RD extends RequestDetails> =
   | {
-      error: ApiError<keyof R>;
+      error: ApiError<keyof ValidatorInputs<RD>>;
     }
   | {
-      data: R;
+      data: RequestResponse<RD>;
     };
 
 export interface ApiTokens {
