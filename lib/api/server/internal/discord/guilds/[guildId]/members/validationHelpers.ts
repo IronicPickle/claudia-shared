@@ -1,6 +1,6 @@
 import { DbDiscordMember, DbDiscordUser } from "../../../dbSpec.ts";
-import { validator as usersUpsertValidator } from "../../../users/{userId}/upsert.ts";
-import { validator as membersUpsertValidator } from "./{memberId}/upsert.ts";
+import { validator as usersUpsertValidator } from "../../../users/[userId]/upsert.ts";
+import { validator as membersUpsertValidator } from "./[memberId]/upsert.ts";
 
 export const validateUserUpsert = (user: DbDiscordUser) => {
   const failedUserValidation = Object.entries(

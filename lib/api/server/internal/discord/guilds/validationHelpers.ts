@@ -1,5 +1,5 @@
 import { DbDiscordGuild } from "../dbSpec.ts";
-import { validator as guildsUpsertValidator } from "./{guildId}/upsert.ts";
+import { validator as guildsUpsertValidator } from "./[guildId]/upsert.ts";
 
 export const validateGuildsUpsert = (guilds: DbDiscordGuild[]) => {
   for (const guildIndex in guilds) {

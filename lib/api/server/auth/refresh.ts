@@ -1,6 +1,9 @@
 import Validator from "../../../objects/Validator.ts";
-import { ApiTokens } from "@shared/lib/ts/api/generic.ts";
-import { RequestDetails, ValidatorInputs } from "../../../ts/api/generic.ts";
+import {
+  ApiTokens,
+  RequestDetails,
+  ValidatorInputs,
+} from "../../../ts/api/generic.ts";
 
 export interface RequestSpec extends RequestDetails {
   body: {
