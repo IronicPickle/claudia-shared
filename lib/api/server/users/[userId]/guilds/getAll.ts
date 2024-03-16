@@ -3,6 +3,7 @@ import {
   RequestDetails,
   ValidatorInputs,
 } from "../../../../../ts/api/generic.ts";
+import { WithoutMembers } from "@shared/lib/api/server/internal/discord/dbSpec.ts";
 import { DbDiscordGuild, WithDbId } from "../../../internal/discord/dbSpec.ts";
 
 export interface RequestSpec extends RequestDetails {
@@ -10,7 +11,7 @@ export interface RequestSpec extends RequestDetails {
     userId: string;
   };
   res: {
-    discordGuilds: WithDbId<DbDiscordGuild>[];
+    discordGuilds: WithoutMembers<WithDbId<DbDiscordGuild>>[];
   };
 }
 

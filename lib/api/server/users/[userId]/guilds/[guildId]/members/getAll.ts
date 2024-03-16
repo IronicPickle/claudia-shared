@@ -14,7 +14,7 @@ export interface RequestSpec extends RequestDetails {
     guildId: string;
   };
   res: {
-    discordGuildMembers: WithDbId<DbDiscordMember>[];
+    guildMembers: WithDbId<DbDiscordMember>[];
   };
 }
 

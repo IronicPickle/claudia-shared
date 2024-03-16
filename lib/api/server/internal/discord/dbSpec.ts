@@ -42,3 +42,5 @@ export interface DbUser {
 }
 
 export type WithDbId<T> = T & { _id: string };
+
+export type WithoutMembers<T> = Omit<T, "members">;
