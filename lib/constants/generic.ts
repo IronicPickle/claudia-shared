@@ -43,3 +43,11 @@ export const httpMethodColors: Record<HttpMethod, ConsoleColor> = {
   [HttpMethod.Unlock]: ConsoleColor.White,
   [HttpMethod.Unsubscribe]: ConsoleColor.White,
 };
+
+export const isEmpty = (value: any) => {
+  if (value == null) return true;
+  if (value.length != null) return value.length === 0;
+  if (typeof value === "object") return Object.values(value).length === 0;
+
+  return true;
+};

@@ -1,4 +1,5 @@
 import { urlPathRegex } from "../constants/generic.ts";
+import { SortDirection } from "../enums/generic.ts";
 import Validator from "../objects/Validator.ts";
 import { ValidationErrors } from "../ts/api/generic.ts";
 
@@ -37,3 +38,30 @@ export const parseValidators = <K extends string | number | symbol>(
 
 export const extractPathFromUrl = (url: string) =>
   Array.from(url.matchAll(urlPathRegex))[0][1];
+
+export const isValidDate = (date: Date) => date.toString() !== "Invalid Date";
+
+export const sort = (sortDirection: SortDirection) => (a: any, b: any) => {
+  const aDate = new Date(a);
+  const bDate = new Date(b);
+
+  if (isValidDate(aDate) && isValidDate(bDate)) {
+    return sortDirection === SortDirection.Ascending
+      ? aDate.getTime() - bDate.getTime()
+      : bDate.getTime() - aDate.getTime();
+  }
+
+  if (isString(a) && isString(b)) {
+    return sortDirection === SortDirection.Ascending
+      ? a.localeCompare(b)
+      : b.localeCompare(a);
+  }
+  if (isNumber(a) && isNumber(b)) {
+    return sortDirection === SortDirection.Ascending ? a - b : b - a;
+  }
+  if (isBoolean(a) && isBoolean(b)) {
+    return sortDirection === SortDirection.Ascending ? +a - +b : +b - +a;
+  }
+
+  return 0;
+};

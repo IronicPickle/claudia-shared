@@ -64,3 +64,8 @@ export enum HttpMethod {
   Unlock = "UNLOCK",
   Unsubscribe = "UNSUBSCRIBE",
 }
+
+export enum SortDirection {
+  Ascending = "ASCENDING",
+  Descending = "DESCENDING",
+}
