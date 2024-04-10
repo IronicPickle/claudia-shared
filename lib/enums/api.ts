@@ -8,6 +8,7 @@ export enum GenericErrorCode {
   KyError = "KY_ERROR",
   BadRequest = "BAD_REQUEST",
   InvalidToken = "InvalidToken",
+  NotImplemented = "NOT_IMPLEMENTED",
 }
 
 export enum OrganisationRole {
