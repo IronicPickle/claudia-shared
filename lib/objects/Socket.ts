@@ -12,6 +12,9 @@ export default class Socket<
     close: (reason: string, wasClean: boolean) => void | Promise<void>;
     error: () => void | Promise<void>;
     message: (data: Partial<D>) => void | Promise<void>;
+    messageRaw: (
+      data: string | ArrayBufferLike | Blob | ArrayBufferView
+    ) => void | Promise<void>;
   } & EH
 > {
   private socket?: WebSocket;
@@ -39,7 +42,9 @@ export default class Socket<
         (this.dispatch as any)("message", {
           [name]: data,
         });
-      } catch (_err: any) {}
+      } catch (_err: any) {
+        (this.dispatch as any)("messageRaw", event.data);
+      }
     };
   }
 
@@ -60,5 +65,9 @@ export default class Socket<
         data,
       })
     );
+  }
+
+  public sendRaw(data: string | ArrayBufferLike | Blob | ArrayBufferView) {
+    this.socket?.send(data);
   }
 }

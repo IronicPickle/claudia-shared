@@ -29,12 +29,9 @@ export default class SocketServer<
     this.setSocket(socket);
 
     this.addEventListener("message", async (data) => {
-      console.log("WS ->", data);
       if (data.authenticate && this.authenticator) {
         const success = await this.authenticator(data.authenticate.token);
-        console.log("WS -> authentication:", success);
         if (success) {
-          console.log("WS -> authenticated");
           this.isAuthenticated = true;
 
           this.dispatch("authenticated");
