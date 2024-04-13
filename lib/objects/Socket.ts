@@ -40,7 +40,7 @@ export default class Socket<
       try {
         const { name, data } = JSON.parse(event.data) ?? {};
         (this.dispatch as any)("message", {
-          [name]: data,
+          [name]: data ?? {},
         });
       } catch (_err: any) {
         (this.dispatch as any)("messageRaw", event.data);
@@ -57,7 +57,7 @@ export default class Socket<
   }
 
   public send(name: N, data?: D) {
-    if (!this.socket) return;
+    if (this.socket?.readyState !== WebSocket.OPEN) return;
 
     this.socket.send(
       JSON.stringify({
@@ -68,6 +68,8 @@ export default class Socket<
   }
 
   public sendRaw(data: string | ArrayBufferLike | Blob | ArrayBufferView) {
+    if (this.socket?.readyState !== WebSocket.OPEN) return;
+
     this.socket?.send(data);
   }
 }
