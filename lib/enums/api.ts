@@ -9,6 +9,7 @@ export enum GenericErrorCode {
   BadRequest = "BAD_REQUEST",
   InvalidToken = "InvalidToken",
   NotImplemented = "NOT_IMPLEMENTED",
+  TooEarly = "TOO_EARLY",
 }
 
 export enum OrganisationRole {

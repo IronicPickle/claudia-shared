@@ -19,10 +19,14 @@ export default class Socket<
     ) => void | Promise<void>;
   } & EH
 > {
+  public id: string;
+
   private socket?: WebSocket;
 
   constructor() {
     super();
+
+    this.id = crypto.randomUUID();
   }
 
   public setSocket(socket: WebSocket) {
