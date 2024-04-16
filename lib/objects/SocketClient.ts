@@ -1,16 +1,14 @@
-import { Key } from "@shared/lib/ts/generic.ts";
+import { Key } from "../ts/generic.ts";
 import Socket from "./Socket.ts";
+import { SocketMessageNames } from "../ts/sockets.ts";
 
 export default class SocketClient<
-  D extends Record<N, any> = Record<Key, any>,
-  N extends Key = keyof D
+  D extends {
+    name: Key;
+    data: any;
+  } = any
 > extends Socket<
-  {
-    authenticate: {
-      token: string;
-    };
-    authenticated: undefined;
-  } & D,
+  D,
   {
     authenticated: () => void;
   }
@@ -25,12 +23,14 @@ export default class SocketClient<
     this.url = url;
     this.spawnSocket();
 
-    this.addEventListener("message", (data) => {
-      if (data.authenticated) {
-        this.isAuthenticated = true;
+    this.addEventListener("message", ({ name, data }) => {
+      switch (name) {
+        case SocketMessageNames.AuthenticateRes: {
+          this.isAuthenticated = true;
 
-        this.dispatch("authenticated");
-        return;
+          this.dispatch("authenticated");
+          break;
+        }
       }
     });
 
@@ -50,7 +50,7 @@ export default class SocketClient<
   }
 
   public authenticate(token: string) {
-    this.send("authenticate", {
+    this.send(SocketMessageNames.AuthenticateReq, {
       token,
     } as any);
   }

@@ -1,18 +1,16 @@
-import { Key } from "@shared/lib/ts/generic.ts";
+import { Key } from "../ts/generic.ts";
 import Socket from "./Socket.ts";
+import { SocketMessageNames } from "../ts/sockets.ts";
 
 type Authenticator = (token: string) => boolean | Promise<boolean>;
 
 export default class SocketServer<
-  D extends Record<N, any> = Record<Key, any>,
-  N extends Key = keyof D
+  D extends {
+    name: Key;
+    data: any;
+  } = any
 > extends Socket<
-  {
-    authenticate: {
-      token: string;
-    };
-    authenticated: undefined;
-  } & D,
+  D,
   {
     authenticated: () => void;
   }
@@ -28,18 +26,23 @@ export default class SocketServer<
 
     this.setSocket(socket);
 
-    this.addEventListener("message", async (data) => {
-      if (data.authenticate && this.authenticator) {
-        const success = await this.authenticator(data.authenticate.token);
-        if (success) {
-          this.isAuthenticated = true;
+    this.addEventListener("message", async ({ name, data }) => {
+      switch (name) {
+        case SocketMessageNames.AuthenticateReq: {
+          if (!this.authenticator) break;
 
-          this.dispatch("authenticated");
-          this.send("authenticated" as any);
-        } else {
-          this.destroy(2000, "Authentication failed");
+          const success = await this.authenticator(data.token);
+          if (success) {
+            this.isAuthenticated = true;
+
+            this.dispatch("authenticated");
+            this.send(SocketMessageNames.AuthenticateRes);
+          } else {
+            this.destroy(2000, "Authentication failed");
+          }
+
+          break;
         }
-        return;
       }
     });
   }

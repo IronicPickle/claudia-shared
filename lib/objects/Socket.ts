@@ -2,16 +2,18 @@ import { Key } from "@shared/lib/ts/generic.ts";
 import EventManager, { Handler } from "./EventManager.ts";
 
 export default class Socket<
-  D extends Record<N, any> = Record<Key, any>,
+  M extends {
+    name: Key;
+    data: any;
+  },
   EH extends Record<E, Handler> = Record<Key, Handler>,
-  N extends Key = keyof D,
   E extends Key = keyof EH
 > extends EventManager<
   {
     open: () => void | Promise<void>;
     close: (reason: string, wasClean: boolean) => void | Promise<void>;
     error: () => void | Promise<void>;
-    message: (data: Partial<D>) => void | Promise<void>;
+    message: (data: M) => void | Promise<void>;
     messageRaw: (
       data: string | ArrayBufferLike | Blob | ArrayBufferView
     ) => void | Promise<void>;
@@ -40,7 +42,8 @@ export default class Socket<
       try {
         const { name, data } = JSON.parse(event.data) ?? {};
         (this.dispatch as any)("message", {
-          [name]: data ?? {},
+          name,
+          data,
         });
       } catch (_err: any) {
         (this.dispatch as any)("messageRaw", event.data);
@@ -56,7 +59,7 @@ export default class Socket<
     this.socket.close(code, reason);
   }
 
-  public send(name: N, data?: D) {
+  public send(name: M["name"], data?: M["data"]) {
     if (this.socket?.readyState !== WebSocket.OPEN) return;
 
     this.socket.send(

@@ -65,3 +65,53 @@ export const sort = (sortDirection: SortDirection) => (a: any, b: any) => {
 
   return 0;
 };
+export interface ParseTimeConfig {
+  days?: boolean;
+  hours?: boolean;
+  mins?: boolean;
+}
+
+export const parseTime = (
+  timeElapsed: number,
+  config: ParseTimeConfig = {
+    days: true,
+    hours: true,
+    mins: true,
+  }
+) => {
+  const isNegative = timeElapsed < 0;
+  if (isNegative) timeElapsed = Math.abs(timeElapsed);
+  if (timeElapsed <= 0) timeElapsed = 0;
+  let days = 0;
+  if (config.days) {
+    days = Math.floor(timeElapsed / 86400);
+    timeElapsed -= days * 86400;
+  }
+  let hours = 0;
+  if (config.mins) {
+    hours = Math.floor(timeElapsed / 3600);
+    timeElapsed -= hours * 3600;
+  }
+  let minutes = 0;
+  if (config.mins) {
+    minutes = Math.floor(timeElapsed / 60);
+    timeElapsed -= minutes * 60;
+  }
+  const seconds = Math.floor(timeElapsed);
+
+  const padNumber = (number: number) => {
+    return number.toString().padStart(2, "0");
+  };
+
+  return {
+    days,
+    hours,
+    minutes,
+    seconds,
+    daysPadded: padNumber(days),
+    hoursPadded: padNumber(hours),
+    minutesPadded: padNumber(minutes),
+    secondsPadded: padNumber(seconds),
+    isNegative,
+  };
+};
