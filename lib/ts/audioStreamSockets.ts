@@ -1,12 +1,27 @@
-import { AudioSourceDetails } from "./audio.ts";
+import { AudioSourceDetails, AudioStreamFilters } from "./audio.ts";
 
 export enum AudioStreamSocketMessageNames {
   StateReq = "state-req",
   StateRes = "state-res",
+
   PlayReq = "play-req",
   PlayRes = "play-res",
+  SkipReq = "skip-req",
+  SkipRes = "skip-res",
+  StopReq = "stop-req",
+  StopRes = "stop-res",
+
+  PauseReq = "pause-req",
+  PauseRes = "pause-res",
+  ResumeReq = "resume-req",
+  ResumeRes = "resume-res",
+
+  SeekReq = "seek-req",
+  SeekRes = "seek-res",
+  SetFiltersReq = "set-filters-req",
+  SetFiltersRes = "set-filters-res",
+
   TrackStartEvent = "track-start-event",
-  TrackEndEvent = "track-end-event",
   TrackNextEvent = "track-next-event",
   TrackPauseEvent = "track-pause-event",
   TrackResumeEvent = "track-resume-event",
@@ -32,6 +47,73 @@ export interface AudioStreamSocketMessageData {
       track: AudioSourceDetails;
     };
   };
+  [AudioStreamSocketMessageNames.SkipReq]: {
+    name: AudioStreamSocketMessageNames.SkipReq;
+    data: {};
+  };
+  [AudioStreamSocketMessageNames.SkipRes]: {
+    name: AudioStreamSocketMessageNames.SkipRes;
+    data: {
+      success: boolean;
+    };
+  };
+  [AudioStreamSocketMessageNames.StopReq]: {
+    name: AudioStreamSocketMessageNames.StopReq;
+    data: {};
+  };
+  [AudioStreamSocketMessageNames.StopRes]: {
+    name: AudioStreamSocketMessageNames.StopRes;
+    data: {
+      success: boolean;
+    };
+  };
+
+  [AudioStreamSocketMessageNames.PauseReq]: {
+    name: AudioStreamSocketMessageNames.PauseReq;
+    data: {};
+  };
+  [AudioStreamSocketMessageNames.PauseRes]: {
+    name: AudioStreamSocketMessageNames.PauseRes;
+    data: {
+      success: boolean;
+    };
+  };
+  [AudioStreamSocketMessageNames.ResumeReq]: {
+    name: AudioStreamSocketMessageNames.ResumeReq;
+    data: {};
+  };
+  [AudioStreamSocketMessageNames.ResumeRes]: {
+    name: AudioStreamSocketMessageNames.ResumeRes;
+    data: {
+      success: boolean;
+    };
+  };
+
+  [AudioStreamSocketMessageNames.SeekReq]: {
+    name: AudioStreamSocketMessageNames.SeekReq;
+    data: {
+      position: number;
+    };
+  };
+  [AudioStreamSocketMessageNames.SeekRes]: {
+    name: AudioStreamSocketMessageNames.SeekRes;
+    data: {
+      success: boolean;
+    };
+  };
+  [AudioStreamSocketMessageNames.SetFiltersReq]: {
+    name: AudioStreamSocketMessageNames.SetFiltersReq;
+    data: {
+      filters: AudioStreamFilters;
+    };
+  };
+  [AudioStreamSocketMessageNames.SetFiltersRes]: {
+    name: AudioStreamSocketMessageNames.SetFiltersRes;
+    data: {
+      success: boolean;
+    };
+  };
+
   [AudioStreamSocketMessageNames.StateReq]: {
     name: AudioStreamSocketMessageNames.StateReq;
     data: {};
@@ -42,14 +124,13 @@ export interface AudioStreamSocketMessageData {
       success: boolean;
 
       queue: AudioSourceDetails[];
+      trackTime: number | undefined;
+      filters: AudioStreamFilters;
+      isPaused: boolean;
     };
   };
   [AudioStreamSocketMessageNames.TrackStartEvent]: {
     name: AudioStreamSocketMessageNames.TrackStartEvent;
-    data: {};
-  };
-  [AudioStreamSocketMessageNames.TrackEndEvent]: {
-    name: AudioStreamSocketMessageNames.TrackEndEvent;
     data: {};
   };
   [AudioStreamSocketMessageNames.TrackNextEvent]: {
@@ -66,7 +147,9 @@ export interface AudioStreamSocketMessageData {
   };
   [AudioStreamSocketMessageNames.TrackSeekEvent]: {
     name: AudioStreamSocketMessageNames.TrackSeekEvent;
-    data: {};
+    data: {
+      trackPosition: number;
+    };
   };
   [AudioStreamSocketMessageNames.TrackStopEvent]: {
     name: AudioStreamSocketMessageNames.TrackStopEvent;
@@ -84,7 +167,9 @@ export interface AudioStreamSocketMessageData {
   };
   [AudioStreamSocketMessageNames.FilterChangeEvent]: {
     name: AudioStreamSocketMessageNames.FilterChangeEvent;
-    data: {};
+    data: {
+      filters: AudioStreamFilters;
+    };
   };
   [AudioStreamSocketMessageNames.FilterResetEvent]: {
     name: AudioStreamSocketMessageNames.FilterResetEvent;
@@ -95,10 +180,21 @@ export interface AudioStreamSocketMessageData {
 export type AudioStreamSocketMessage =
   | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.PlayReq]
   | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.PlayRes]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.SkipReq]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.SkipRes]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.StopReq]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.StopRes]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.PauseReq]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.PauseRes]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.ResumeReq]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.ResumeRes]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.SeekReq]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.SeekRes]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.SetFiltersReq]
+  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.SetFiltersRes]
   | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.StateReq]
   | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.StateRes]
   | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.TrackStartEvent]
-  | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.TrackEndEvent]
   | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.TrackNextEvent]
   | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.TrackPauseEvent]
   | AudioStreamSocketMessageData[AudioStreamSocketMessageNames.TrackResumeEvent]

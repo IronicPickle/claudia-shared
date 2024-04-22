@@ -11,7 +11,7 @@ export default class Socket<
 > extends EventManager<
   {
     open: () => void | Promise<void>;
-    close: (reason: string, wasClean: boolean) => void | Promise<void>;
+    close: (code: number, wasClean: boolean) => void | Promise<void>;
     error: () => void | Promise<void>;
     message: (data: M) => void | Promise<void>;
     messageRaw: (
@@ -40,7 +40,7 @@ export default class Socket<
     this.socket.onopen = () => (this.dispatch as any)("open");
 
     this.socket.onclose = (event) =>
-      (this.dispatch as any)("close", event.reason, event.wasClean);
+      (this.dispatch as any)("close", event.code, event.wasClean);
     this.socket.onerror = () => (this.dispatch as any)("error");
     this.socket.onmessage = (event) => {
       try {

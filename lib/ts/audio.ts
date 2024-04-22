@@ -38,3 +38,10 @@ export type AudioSourceDetails = (
   | AudioSourceDetailsUnknown
 ) &
   AudioSourceDetailsShared;
+
+export interface AudioStreamFilters {
+  pitch: number;
+  volume: number;
+  bass: number;
+  treble: number;
+}
