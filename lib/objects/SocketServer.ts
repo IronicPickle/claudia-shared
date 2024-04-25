@@ -13,11 +13,14 @@ export default class SocketServer<
   D,
   {
     authenticated: () => void;
+    heartbeat: () => void;
   }
 > {
   private authenticator?: Authenticator;
 
   private isAuthenticated = false;
+
+  private lastHeartbeat: string | undefined;
 
   constructor(socket: WebSocket, authenticator?: Authenticator) {
     super();
@@ -43,11 +46,21 @@ export default class SocketServer<
 
           break;
         }
+        case SocketMessageNames.HeartbeatReq: {
+          this.lastHeartbeat = new Date().toISOString();
+
+          this.dispatch("heartbeat");
+          this.send(SocketMessageNames.HeartbeatRes);
+        }
       }
     });
   }
 
   public getIsAuthenticated() {
     return this.isAuthenticated;
+  }
+
+  public getLastHeartbeat() {
+    return this.lastHeartbeat;
   }
 }
