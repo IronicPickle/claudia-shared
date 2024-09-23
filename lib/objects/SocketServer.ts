@@ -4,6 +4,10 @@ import { SocketMessageNames } from "../ts/sockets.ts";
 
 type Authenticator = (token: string) => boolean | Promise<boolean>;
 
+interface Config {
+  resOnAuth?: boolean;
+}
+
 export default class SocketServer<
   D extends {
     name: Key;
@@ -22,7 +26,13 @@ export default class SocketServer<
 
   private lastHeartbeat: string | undefined;
 
-  constructor(socket: WebSocket, authenticator?: Authenticator) {
+  constructor(
+    socket: WebSocket,
+    authenticator?: Authenticator,
+    conifg: Config = {
+      resOnAuth: true,
+    }
+  ) {
     super();
 
     this.authenticator = authenticator;
@@ -39,7 +49,7 @@ export default class SocketServer<
             this.isAuthenticated = true;
 
             this.dispatch("authenticated");
-            this.send(SocketMessageNames.AuthenticateRes);
+            if (conifg.resOnAuth) this.send(SocketMessageNames.AuthenticateRes);
           } else {
             this.destroy(2000, "Authentication failed");
           }
