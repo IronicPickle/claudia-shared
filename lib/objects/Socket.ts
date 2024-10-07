@@ -1,4 +1,4 @@
-import { Key } from "@shared/lib/ts/generic.ts";
+import { Key } from "../ts/generic.ts";
 import EventManager, { Handler } from "./EventManager.ts";
 
 export default class Socket<

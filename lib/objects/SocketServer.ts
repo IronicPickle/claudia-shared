@@ -51,7 +51,8 @@ export default class SocketServer<
             this.dispatch("authenticated");
             if (conifg.resOnAuth) this.send(SocketMessageNames.AuthenticateRes);
           } else {
-            this.destroy(2000, "Authentication failed");
+            console.log("auth failed");
+            this.destroy(3000, "Authentication failed");
           }
 
           break;
